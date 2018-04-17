@@ -204,9 +204,16 @@ function googleMapAdmin2() {
 
 function googleMapAdmin()
 {
-
+    var autocomplete;
+    var geocoder = new google.maps.Geocoder();
+    var map;
+    var addressId = 'id_address';
     var geolocationId = 'id_geolocation';
     var markerAdded = false;
+    var service;
+
+
+
     var self = {
         initialize: function(initData) {
 
@@ -247,15 +254,29 @@ function googleMapAdmin()
             });
 
             // Plot markers in existing locations
-            self.addOldMarkers(map,initData);
+            self.addOldMarkers(initData);
  
 
+             autocomplete = new google.maps.places.Autocomplete(
+                /** @type {!HTMLInputElement} */(document.getElementById(addressId)),
+                {types: ['geocode']});
 
-            
+            // this only triggers on enter, or if a suggested location is chosen
+            // todo: if a user doesn't choose a suggestion and presses tab, the map doesn't update
+            autocomplete.addListener("place_changed", self.codeAddress);
+
+            // don't make enter submit the form, let it just trigger the place_changed event
+            // which triggers the map update & geocode
+            $("#" + addressId).keydown(function (e) {
+                if (e.keyCode == 13) {  // enter key
+                    e.preventDefault();
+                    return false;
+                }
+            });  
 
         },
 
-        addOldMarkers: function(map, initData) {
+        addOldMarkers: function(initData) {
             console.log("ENTRO");
 
             for (var i in initData)
@@ -287,9 +308,61 @@ function googleMapAdmin()
         updateGeolocation: function(latlng) {
             document.getElementById(geolocationId).value = latlng.lat() + "," + latlng.lng();
             $("#" + geolocationId).trigger('change');
+
+
+            // Get nearest place
+              var request = {
+                location: latlng,
+                radius: '5000',
+                //type: ['restaurant']
+              };
+
+              service = new google.maps.places.PlacesService(map);
+              service.nearbySearch(request, self.callback);
+
+
+
+
         },
 
-        };
+        codeAddress: function() {
+            var place = autocomplete.getPlace();
+
+            if(place.geometry !== undefined) {
+                self.updateWithCoordinates(place.geometry.location);
+            }
+            else {
+                geocoder.geocode({'address': place.name}, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        var latlng = results[0].geometry.location;
+                        self.updateWithCoordinates(latlng);
+                    } else {
+                        alert("Geocode was not successful for the following reason: " + status);
+                    }
+                });
+            }
+        },
+
+        updateWithCoordinates: function(latlng) {
+            map.setCenter(latlng);
+            map.setZoom(18);
+            //self.setMarker(latlng);
+            self.updateGeolocation(latlng);
+        },
+
+        callback: function(results, status) {
+            console.log("CALLLLLLLLLLL");
+            console.log(results);
+            console.log(status);
+              if (status == google.maps.places.PlacesServiceStatus.OK) {
+                for (var i = 0; i < results.length; i++) {
+                  var place = results[i];
+                  console.log(results[i]);
+                }
+              }
+        },
+
+    };
 
     return self;
 }
