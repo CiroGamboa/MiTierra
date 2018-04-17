@@ -211,6 +211,8 @@ function googleMapAdmin()
     var geolocationId = 'id_geolocation';
     var markerAdded = false;
     var service;
+    var radius = 500;
+    var actualLatLng;
 
 
 
@@ -222,6 +224,14 @@ function googleMapAdmin()
             var zoom = 12;
 
 
+            var existinglocation = self.getExistingLocation();
+
+            if (existinglocation) {
+                lat = existinglocation[0];
+                lng = existinglocation[1];
+                zoom = 18;
+            }
+
             var latlng = new google.maps.LatLng(lat,lng);
 
             var myOptions = {
@@ -231,10 +241,11 @@ function googleMapAdmin()
 
             map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
+
             map.addListener("click", function(event) {
                 // get lat/lon of click
 
-                if(!markerAdded)
+                if(!markerAdded && !existinglocation)
                 {
                     var clickLat = event.latLng.lat();
                     var clickLon = event.latLng.lng();
@@ -253,8 +264,17 @@ function googleMapAdmin()
 
             });
 
-            // Plot markers in existing locations
-            self.addOldMarkers(initData);
+            // Put marker of a existing place
+            if (existinglocation) {
+                self.addMarkerByLaLo(latlng);
+            }
+            else
+            {// Plot markers in existing locations
+                self.addOldMarkers(initData);
+            }
+            
+
+
  
 
              autocomplete = new google.maps.places.Autocomplete(
@@ -294,12 +314,26 @@ function googleMapAdmin()
 
         },
 
+        addMarkerByLaLo: function(latlng) {
+
+            var marker = new google.maps.Marker({
+                position: latlng,
+                map: map
+            });
+
+            self.updateGeolocation(marker.position);
+            self.addMarkerDrag(marker);
+        },
+
+
         addMarkerDrag: function(marker) {
             marker.setDraggable(true);
             google.maps.event.addListener(marker, 'dragend', function(new_location) {
                 self.updateGeolocation(new_location.latLng);
             });
         },
+
+
 
         updateMarker: function(latlng,marker) {
             marker.setPosition(latlng);
@@ -309,24 +343,48 @@ function googleMapAdmin()
             document.getElementById(geolocationId).value = latlng.lat() + "," + latlng.lng();
             $("#" + geolocationId).trigger('change');
 
+            self.getClosestPlace(latlng);
+            // // Get nearest place
+            //   var request = {
+            //     location: latlng,
+            //     radius: radius,
+            //     //type: ['restaurant']
+            //   };
 
-            // Get nearest place
-              var request = {
-                location: latlng,
-                radius: '5000',
-                //type: ['restaurant']
-              };
-
-              service = new google.maps.places.PlacesService(map);
-              service.nearbySearch(request, self.callback);
+            //   service = new google.maps.places.PlacesService(map);
+            //   service.nearbySearch(request, self.callback);
 
 
 
 
         },
 
+        getClosestPlace: function(latlng){
+
+            // Get nearest place
+              var request = {
+                location: latlng,
+                radius: radius,
+                //type: ['restaurant']
+              };
+
+              service = new google.maps.places.PlacesService(map);
+              service.nearbySearch(request, self.callback);
+              actualLatLng = latlng;
+
+        },
+
+        getExistingLocation: function() {
+            var geolocation = document.getElementById(geolocationId).value;
+            console.log(geolocation);
+            if (geolocation) {
+                return geolocation.split(',');
+            }
+        },
+
         codeAddress: function() {
             var place = autocomplete.getPlace();
+            console.log(place);
 
             if(place.geometry !== undefined) {
                 self.updateWithCoordinates(place.geometry.location);
@@ -355,10 +413,18 @@ function googleMapAdmin()
             console.log(results);
             console.log(status);
               if (status == google.maps.places.PlacesServiceStatus.OK) {
-                for (var i = 0; i < results.length; i++) {
-                  var place = results[i];
-                  console.log(results[i]);
-                }
+                //for (var i = 0; i < results.length; i++) {
+                  //var place = results[i];
+                  //console.log(results[i]);
+                //}
+                console.log(results[0]);
+                radius = 500;
+                document.getElementById(addressId).value = results[0].name;
+              }
+              else
+              {
+                radius = radius*2;
+                self.getClosestPlace(actualLatLng);
               }
         },
 
