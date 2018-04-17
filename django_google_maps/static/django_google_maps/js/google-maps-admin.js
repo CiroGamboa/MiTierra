@@ -21,185 +21,185 @@ This script expects:
 
 */
 
-function googleMapAdmin2() {
+// function googleMapAdmin2() {
 
-    var autocomplete;
-    var geocoder = new google.maps.Geocoder();
-    var map;
-    var marker;
+//     var autocomplete;
+//     var geocoder = new google.maps.Geocoder();
+//     var map;
+//     var marker;
 
-    var geolocationId = 'id_geolocation';
-    var addressId = 'id_address';
+//     var geolocationId = 'id_geolocation';
+//     var addressId = 'id_address';
 
-    var self = {
-        initialize: function(initData) {
-            //var lat = 0;
-            //var lng = 0;
-            //var zoom = 2;
+//     var self = {
+//         initialize: function(initData) {
+//             //var lat = 0;
+//             //var lng = 0;
+//             //var zoom = 2;
 
-            var lat = 7.078179;
-            var lng = -73.108048;
-            var zoom = 12;
-            // set up initial map to be world view. also, add change
-            // event so changing address will update the map
-            var existinglocation = self.getExistingLocation();
+//             var lat = 7.078179;
+//             var lng = -73.108048;
+//             var zoom = 12;
+//             // set up initial map to be world view. also, add change
+//             // event so changing address will update the map
+//             var existinglocation = self.getExistingLocation();
 
-            if (existinglocation) {
-                lat = existinglocation[0];
-                lng = existinglocation[1];
-                zoom = 18;
-            }
+//             if (existinglocation) {
+//                 lat = existinglocation[0];
+//                 lng = existinglocation[1];
+//                 zoom = 18;
+//             }
 
-            var latlng = new google.maps.LatLng(lat,lng);
+//             var latlng = new google.maps.LatLng(lat,lng);
 
-            // Plot markers in existing locations
-            for (var i in initData)
-            {
-                var lat_in = initData[i].lat;
-                var lon_in = initData[i].lon;
-                console.log(lat_in);
-                console.log(lon_in);
-                var lalo = new google.maps.LatLng(lat_in,lon_in);
-                self.addOldMarkers(lalo);
-            }
-
-
-            var myOptions = {
-              zoom: zoom,
-              center: latlng,
-              mapTypeId: self.getMapType()
-            };
-            map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-            if (existinglocation) {
-                self.setMarker(latlng);
-            }
-
-            autocomplete = new google.maps.places.Autocomplete(
-                /** @type {!HTMLInputElement} */(document.getElementById(addressId)),
-                {types: ['geocode']});
-
-            // this only triggers on enter, or if a suggested location is chosen
-            // todo: if a user doesn't choose a suggestion and presses tab, the map doesn't update
-            autocomplete.addListener("place_changed", self.codeAddress);
-
-            // don't make enter submit the form, let it just trigger the place_changed event
-            // which triggers the map update & geocode
-            $("#" + addressId).keydown(function (e) {
-                if (e.keyCode == 13) {  // enter key
-                    e.preventDefault();
-                    return false;
-                }
-            });
-        },
+//             // Plot markers in existing locations
+//             for (var i in initData)
+//             {
+//                 var lat_in = initData[i].lat;
+//                 var lon_in = initData[i].lon;
+//                 console.log(lat_in);
+//                 console.log(lon_in);
+//                 var lalo = new google.maps.LatLng(lat_in,lon_in);
+//                 self.addOldMarkers(lalo);
+//             }
 
 
+//             var myOptions = {
+//               zoom: zoom,
+//               center: latlng,
+//               mapTypeId: self.getMapType()
+//             };
+//             map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+//             if (existinglocation) {
+//                 self.setMarker(latlng);
+//             }
 
-        getMapType : function() {
-            // https://developers.google.com/maps/documentation/javascript/maptypes
-            var geolocation = document.getElementById(addressId);
-            var allowedType = ['roadmap', 'satellite', 'hybrid', 'terrain'];
-            var mapType = geolocation.getAttribute('data-map-type');
+//             autocomplete = new google.maps.places.Autocomplete(
+//                 /** @type {!HTMLInputElement} */(document.getElementById(addressId)),
+//                 {types: ['geocode']});
 
-            if (mapType && -1 !== allowedType.indexOf(mapType)) {
-                return mapType;
-            }
+//             // this only triggers on enter, or if a suggested location is chosen
+//             // todo: if a user doesn't choose a suggestion and presses tab, the map doesn't update
+//             autocomplete.addListener("place_changed", self.codeAddress);
 
-            return google.maps.MapTypeId.HYBRID;
-        },
-
-        getExistingLocation: function() {
-            var geolocation = document.getElementById(geolocationId).value;
-            console.log("LA CLAVE");
-            console.log(geolocation);
-            if (geolocation) {
-                return geolocation.split(',');
-            }
-        },
-
-        codeAddress: function() {
-            var place = autocomplete.getPlace();
-
-            if(place.geometry !== undefined) {
-                self.updateWithCoordinates(place.geometry.location);
-            }
-            else {
-                geocoder.geocode({'address': place.name}, function(results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        var latlng = results[0].geometry.location;
-                        self.updateWithCoordinates(latlng);
-                    } else {
-                        alert("Geocode was not successful for the following reason: " + status);
-                    }
-                });
-            }
-        },
-
-        updateWithCoordinates: function(latlng) {
-            map.setCenter(latlng);
-            map.setZoom(18);
-            self.setMarker(latlng);
-            self.updateGeolocation(latlng);
-        },
-
-        setMarker: function(latlng) {
-            if (marker) {
-                self.updateMarker(latlng);
-            } else {
-                self.addMarker({'latlng': latlng, 'draggable': true});
-            }
-        },
+//             // don't make enter submit the form, let it just trigger the place_changed event
+//             // which triggers the map update & geocode
+//             $("#" + addressId).keydown(function (e) {
+//                 if (e.keyCode == 13) {  // enter key
+//                     e.preventDefault();
+//                     return false;
+//                 }
+//             });
+//         },
 
 
 
-        addMarker: function(Options) {
-            marker = new google.maps.Marker({
-                map: map,
-                position: Options.latlng
-            });
+//         getMapType : function() {
+//             // https://developers.google.com/maps/documentation/javascript/maptypes
+//             var geolocation = document.getElementById(addressId);
+//             var allowedType = ['roadmap', 'satellite', 'hybrid', 'terrain'];
+//             var mapType = geolocation.getAttribute('data-map-type');
 
-            var draggable = Options.draggable || false;
-            if (draggable) {
-                self.addMarkerDrag(marker);
-            }
-        },
+//             if (mapType && -1 !== allowedType.indexOf(mapType)) {
+//                 return mapType;
+//             }
 
-        addOldMarkers: function(lalo) {
-            console.log("ENTRO");
-            var marker2 = new google.maps.Marker({
-                map: map,
-                position: lalo
-            });
+//             return google.maps.MapTypeId.HYBRID;
+//         },
 
-            google.maps.event.addListener(marker2,"click",function (event){
-                infoWindow.setContent(this.position);
-                infoWindow.open(map, this);
-            });
+//         getExistingLocation: function() {
+//             var geolocation = document.getElementById(geolocationId).value;
+//             console.log("LA CLAVE");
+//             console.log(geolocation);
+//             if (geolocation) {
+//                 return geolocation.split(',');
+//             }
+//         },
 
-            // var draggable = Options.draggable || false;
-            // if (draggable) {
-            //     self.addMarkerDrag(marker);
-            // }
-        },
+//         codeAddress: function() {
+//             var place = autocomplete.getPlace();
 
-        addMarkerDrag: function() {
-            marker.setDraggable(true);
-            google.maps.event.addListener(marker, 'dragend', function(new_location) {
-                self.updateGeolocation(new_location.latLng);
-            });
-        },
+//             if(place.geometry !== undefined) {
+//                 self.updateWithCoordinates(place.geometry.location);
+//             }
+//             else {
+//                 geocoder.geocode({'address': place.name}, function(results, status) {
+//                     if (status == google.maps.GeocoderStatus.OK) {
+//                         var latlng = results[0].geometry.location;
+//                         self.updateWithCoordinates(latlng);
+//                     } else {
+//                         alert("Geocode was not successful for the following reason: " + status);
+//                     }
+//                 });
+//             }
+//         },
 
-        updateMarker: function(latlng) {
-            marker.setPosition(latlng);
-        },
+//         updateWithCoordinates: function(latlng) {
+//             map.setCenter(latlng);
+//             map.setZoom(18);
+//             self.setMarker(latlng);
+//             self.updateGeolocation(latlng);
+//         },
 
-        updateGeolocation: function(latlng) {
-            document.getElementById(geolocationId).value = latlng.lat() + "," + latlng.lng();
-            $("#" + geolocationId).trigger('change');
-        }
-    };
+//         setMarker: function(latlng) {
+//             if (marker) {
+//                 self.updateMarker(latlng);
+//             } else {
+//                 self.addMarker({'latlng': latlng, 'draggable': true});
+//             }
+//         },
 
-    return self;
-}
+
+
+//         addMarker: function(Options) {
+//             marker = new google.maps.Marker({
+//                 map: map,
+//                 position: Options.latlng
+//             });
+
+//             var draggable = Options.draggable || false;
+//             if (draggable) {
+//                 self.addMarkerDrag(marker);
+//             }
+//         },
+
+//         addOldMarkers: function(lalo) {
+//             console.log("ENTRO");
+//             var marker2 = new google.maps.Marker({
+//                 map: map,
+//                 position: lalo
+//             });
+
+//             google.maps.event.addListener(marker2,"click",function (event){
+//                 infoWindow.setContent(this.position);
+//                 infoWindow.open(map, this);
+//             });
+
+//             // var draggable = Options.draggable || false;
+//             // if (draggable) {
+//             //     self.addMarkerDrag(marker);
+//             // }
+//         },
+
+//         addMarkerDrag: function() {
+//             marker.setDraggable(true);
+//             google.maps.event.addListener(marker, 'dragend', function(new_location) {
+//                 self.updateGeolocation(new_location.latLng);
+//             });
+//         },
+
+//         updateMarker: function(latlng) {
+//             marker.setPosition(latlng);
+//         },
+
+//         updateGeolocation: function(latlng) {
+//             document.getElementById(geolocationId).value = latlng.lat() + "," + latlng.lng();
+//             $("#" + geolocationId).trigger('change');
+//         }
+//     };
+
+//     return self;
+// }
 
 
 function googleMapAdmin()
@@ -250,6 +250,7 @@ function googleMapAdmin()
                     var clickLat = event.latLng.lat();
                     var clickLon = event.latLng.lng();
 
+
  
                     var marker = new google.maps.Marker({
                         position: new google.maps.LatLng(clickLat,clickLon),
@@ -298,16 +299,42 @@ function googleMapAdmin()
 
         addOldMarkers: function(initData) {
             console.log("ENTRO");
+              var image = {
+                url: "https://cdn1.iconfinder.com/data/icons/map-objects/154/map-object-tree-park-forest-point-place-512.png",
+                // This marker is 20 pixels wide by 32 pixels high.
+                scaledSize: new google.maps.Size(30, 38),
+                // The origin for this image is (0, 0).
+                origin: new google.maps.Point(0, 0),
+                // The anchor for this image is the base of the flagpole at (0, 32).
+                anchor: new google.maps.Point(0, 32)
+              };
 
             for (var i in initData)
             {
                 var lat_in = initData[i].lat;
                 var lon_in = initData[i].lon;
+                var tipo = initData[i].tipo;
+                console.log(tipo);
+
+                if(tipo == "Arbol")
+                {
+                    image.url = "https://cdn1.iconfinder.com/data/icons/map-objects/154/map-object-tree-park-forest-point-place-512.png";
+                }
+                else if(tipo == "Arbusto")
+                {
+                    image.url = "https://cdn1.iconfinder.com/data/icons/map-objects/154/map-object-fir-forest-park-512.png";
+                }
+                else
+                {
+                    image.url = "https://cdn2.iconfinder.com/data/icons/places-4/100/leaf_place_marker_location_nature_eco-512.png";
+                }
+
                 console.log(lat_in);
                 console.log(lon_in);
                 var marker = new google.maps.Marker({
                     position: {lat: lat_in, lng: lon_in},
                     map: map,
+                    icon: image
                 });
 
             }
