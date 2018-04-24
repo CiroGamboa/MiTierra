@@ -213,7 +213,7 @@ function googleMapAdmin()
     var service;
     var radius = 500;
     var actualLatLng;
-
+    var dummy = 0;
 
 
     var self = {
@@ -370,7 +370,23 @@ function googleMapAdmin()
             document.getElementById(geolocationId).value = latlng.lat() + "," + latlng.lng();
             $("#" + geolocationId).trigger('change');
 
-            self.getClosestPlace(latlng);
+            if(document.URL.includes("change"))
+            {
+                dummy = dummy + 1;
+                if(dummy >= 2)
+                {
+                    self.getClosestPlace(latlng);  
+                }
+               
+            }
+            else
+            {
+               self.getClosestPlace(latlng);  
+            }
+
+            
+
+            
             // // Get nearest place
             //   var request = {
             //     location: latlng,
@@ -475,6 +491,7 @@ function googleMapAdmin()
 $(document).ready(function() {
 
     console.log("Aqui");
+    console.log(document.URL);
         axios.get('../../../../../getActivos/').then(function (response) { 
         this.initData = response.data;
         console.log(this.initData);

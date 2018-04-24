@@ -15,6 +15,8 @@ class ActivoAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.Activo, ActivoAdmin)
+#admin.site.register(models.Activo, Tipoactivo)
+
 
 # Cambiar aspecto del django admin
 admin.site.site_header = "Administración de MiTierra"
