@@ -214,6 +214,7 @@ function googleMapAdmin()
     var radius = 500;
     var actualLatLng;
     var dummy = 0;
+    var current_marker;
 
 
     var self = {
@@ -245,6 +246,13 @@ function googleMapAdmin()
             map.addListener("click", function(event) {
                 // get lat/lon of click
 
+
+                if(markerAdded)
+                {
+                    current_marker.setMap(null);
+                    markerAdded = false;
+                }
+
                 if(!markerAdded && !existinglocation)
                 {
                     var clickLat = event.latLng.lat();
@@ -257,11 +265,15 @@ function googleMapAdmin()
                         map: map
                     });
 
+                    current_marker = marker;
+
                     self.updateGeolocation(marker.position);
                     self.addMarkerDrag(marker);
 
                     markerAdded = true;
                 }
+
+
 
             });
 
