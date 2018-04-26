@@ -237,7 +237,8 @@ function googleMapAdmin()
 
             var myOptions = {
               zoom: zoom,
-              center: latlng
+              center: latlng,
+              mapTypeId: google.maps.MapTypeId.SATELLITE
             };
 
             map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
