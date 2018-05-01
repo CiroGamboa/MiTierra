@@ -33,7 +33,9 @@
 	<label>Filtrar: <select name="action" required="">
   		<option value="" selected="">---------</option>
 
-  		<option value="delete_selected">Eliminar activos seleccionado/s</option>
+  		<option value="delete_selected">Arbol</option>
+  		<option value="delete_selected">Arbusto</option>
+  		<option value="delete_selected">Cultivo</option>
 
 		</select>
 
@@ -47,33 +49,93 @@
 
 		<div class="results">
 
-
-
-
-
-
-			<table id="result_list">
+			<table class="fixed_header" id="result_list">
 			<thead>
-			<tr>
-
+				<tr>
+					<!--
 					<th scope="col" class="action-checkbox-column">
 		   
 		   				<div class="text"><span><input id="action-toggle" type="checkbox"></span></div>
 		   				<div class="clear"></div>
 					</th>
+					-->
 					<th scope="col" class="column-__str__">
 		   
-		   				<div class="text"><span>Activo</span></div>
+		   				<div class="text"><span>Tipo</span></div>
+		   				<div class="clear"></div>
+					</th>
+
+					<th scope="col" class="column-__str__">
+		   
+		   				<div class="text"><span>Ubicación</span></div>
 		   				<div class="clear"></div>
 					</th>
 				</tr>	
 			</thead>
 			<tbody>
 
+			<script>
+			var totalRows = 20;
 
-				<tr class="row1"><td class="action-checkbox"><input name="_selected_action" value="10" class="action-select" type="checkbox"></td><th class="field-__str__"><a href="/admin/mvc/activo/10/change/">Acuducto</a></th></tr>
+			    function drawTable() {
+			        // get the reference for the body
+			        //var div1 = document.getElementById('div1');
+			 
+			        // creates a <table> element
+			        //var tbl = document.createElement("table");
+			        var tbl = document.getElementById('result_list');
+			 
+			        // creating rows
+			        var cont = 0;
+			        for (var r = 0; r < totalRows; r++) {
+			        	cont = cont+1;
+			        	if(cont%2 == 0)
+			        	{
+			        		var clase = "row1";
+			        	}
+			        	else
+			        	{
+			        		var clase = "row2";
+			        	}
+
+			            var row = document.createElement("tr");
+				     	
+				     	row.className = clase;
+
+					     // create cells in row
+					     
+					     
+					     //var cellText_Tipo = document.createTextNode("Arbol");
+					     //cell_Tipo.innerHTML=  '<a href="'+whatever+'">'+fname[j]+'</a>';
+					     
+					     //cellText_Tipo.appendChild(link);
+					     //cell_Tipo.appendChild(cellText_Tipo);
+					     var cell_Tipo = document.createElement("td");
+					     cell_Tipo.innerHTML=  '<a href="/admin/mvc/activo/10/change/" title="Modificar">Arbol</a>';
+					     row.appendChild(cell_Tipo);
+
+					     var cell_Ubicacion = document.createElement("td");
+					     cell_Ubicacion.innerHTML=  '<a href="/admin/mvc/activo/10/change/" title="Modificar">Somewhere</a>';
+					     row.appendChild(cell_Ubicacion);
 
 
+						 tbl.appendChild(row); // add the row to the end of the table body
+			        }
+			    
+			     //div1.appendChild(tbl); // appends <table> into <div1>
+			}
+			window.onload=drawTable; 
+			</script>
+
+
+				<tr class="row1">
+
+					<td><a href="/admin/mvc/activo/10/change/">Arbol</a></td>
+					<td><a href="/admin/mvc/activo/10/change/">Acuducto</a></td>
+
+				</tr>
+
+				<!--
 				<tr class="row2"><td class="action-checkbox"><input name="_selected_action" value="9" class="action-select" type="checkbox"></td><th class="field-__str__"><a href="/admin/mvc/activo/9/change/">La Parcela</a></th></tr>
 
 
@@ -83,6 +145,7 @@
 				<tr class="row2"><td class="action-checkbox"><input name="_selected_action" value="7" class="action-select" type="checkbox"></td><th class="field-__str__"><a href="/admin/mvc/activo/7/change/">La Parcela - UPB - Aguacate</a></th></tr>
 
 
+				
 				<tr class="row1"><td class="action-checkbox"><input name="_selected_action" value="6" class="action-select" type="checkbox"></td><th class="field-__str__"><a href="/admin/mvc/activo/6/change/">Escuela La Judía</a></th></tr>
 
 
@@ -96,6 +159,8 @@
 
 
 				<tr class="row1"><td class="action-checkbox"><input name="_selected_action" value="1" class="action-select" type="checkbox"></td><th class="field-__str__"><a href="/admin/mvc/activo/1/change/">Floridablanca, Santander Department, Colombia</a></th></tr>
+
+				-->
 
 			</tbody>
 		</table>

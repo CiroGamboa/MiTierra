@@ -1,11 +1,25 @@
 #id_address {width: 40em;}
 /*.map_canvas_wrapper {margin-left: 170px;}*/
 /*#map_canvas {width: 100%; height: 40em;}*/
-#map_canvas {width: 630px; height: 415px;}
+#map_canvas {width: 800px; height: 415px;}
 
-.julito {display: inline-block;}
-.results{width: 70%}
+.julito {display: inline-block; vertical-align: top;}
+.results{width: 70%;}
 
 label[for=id_address]{
 	width: 100%;
 }
+
+/*.fixed_header{
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.fixed_header tbody{
+  display:block;
+  overflow: auto;
+}
+
+.fixed_header thead tr {
+   display: block;
+}*/
