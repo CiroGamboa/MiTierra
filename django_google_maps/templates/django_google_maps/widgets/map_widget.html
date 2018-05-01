@@ -1,2 +1,123 @@
 {% include "django/forms/widgets/text.html" %}
-<div class="map_canvas_wrapper"><div id="map_canvas"></div></div>
+
+
+
+
+
+
+
+
+<!-- Modificaciones -->
+
+<div class="module" id="changelist">
+
+<!--
+    <form id="changelist-form" method="post" novalidate=""><input name="csrfmiddlewaretoken" value="a7XNTK6EPwOlvNMIPSAUZcqDQMf7FQ4FTFc0vxjB9BwF0DCUTu321brXiJ9dMQhe" type="hidden">
+        
+	<div class="actions">
+    	<label>Acción: <select name="action" required="">
+  		<option value="" selected="">---------</option>
+
+  		<option value="delete_selected">Eliminar activos seleccionado/s</option>
+
+		</select></label><input name="select_across" value="0" class="select-across" type="hidden">
+    	<button type="submit" class="button" title="Ejecutar la acción seleccionada" name="index" value="0">Ir</button>
+    
+        <span class="action-counter" data-actions-icnt="9" style="display: inline;">seleccionados 0 de 9</span> 
+	</div>
+-->
+	<div class="julito">
+
+
+
+	<label>Filtrar: <select name="action" required="">
+  		<option value="" selected="">---------</option>
+
+  		<option value="delete_selected">Eliminar activos seleccionado/s</option>
+
+		</select>
+
+		<!--<button type="submit" class="button" title="Ejecutar la acción seleccionada" name="index" value="0" style="display:inline;">Ir</button>-->
+
+		</label> <input name="select_across" value="0" class="select-across" type="hidden"> 
+    	
+
+
+
+
+		<div class="results">
+
+
+
+
+
+
+			<table id="result_list">
+			<thead>
+			<tr>
+
+					<th scope="col" class="action-checkbox-column">
+		   
+		   				<div class="text"><span><input id="action-toggle" type="checkbox"></span></div>
+		   				<div class="clear"></div>
+					</th>
+					<th scope="col" class="column-__str__">
+		   
+		   				<div class="text"><span>Activo</span></div>
+		   				<div class="clear"></div>
+					</th>
+				</tr>	
+			</thead>
+			<tbody>
+
+
+				<tr class="row1"><td class="action-checkbox"><input name="_selected_action" value="10" class="action-select" type="checkbox"></td><th class="field-__str__"><a href="/admin/mvc/activo/10/change/">Acuducto</a></th></tr>
+
+
+				<tr class="row2"><td class="action-checkbox"><input name="_selected_action" value="9" class="action-select" type="checkbox"></td><th class="field-__str__"><a href="/admin/mvc/activo/9/change/">La Parcela</a></th></tr>
+
+
+				<tr class="row1"><td class="action-checkbox"><input name="_selected_action" value="8" class="action-select" type="checkbox"></td><th class="field-__str__"><a href="/admin/mvc/activo/8/change/">La Parcela</a></th></tr>
+
+
+				<tr class="row2"><td class="action-checkbox"><input name="_selected_action" value="7" class="action-select" type="checkbox"></td><th class="field-__str__"><a href="/admin/mvc/activo/7/change/">La Parcela - UPB - Aguacate</a></th></tr>
+
+
+				<tr class="row1"><td class="action-checkbox"><input name="_selected_action" value="6" class="action-select" type="checkbox"></td><th class="field-__str__"><a href="/admin/mvc/activo/6/change/">Escuela La Judía</a></th></tr>
+
+
+				<tr class="row2"><td class="action-checkbox"><input name="_selected_action" value="5" class="action-select" type="checkbox"></td><th class="field-__str__"><a href="/admin/mvc/activo/5/change/">Floridablanca</a></th></tr>
+
+
+				<tr class="row1"><td class="action-checkbox"><input name="_selected_action" value="4" class="action-select" type="checkbox"></td><th class="field-__str__"><a href="/admin/mvc/activo/4/change/">Bucaramanga</a></th></tr>
+
+
+				<tr class="row2"><td class="action-checkbox"><input name="_selected_action" value="3" class="action-select" type="checkbox"></td><th class="field-__str__"><a href="/admin/mvc/activo/3/change/">Don Ruben</a></th></tr>
+
+
+				<tr class="row1"><td class="action-checkbox"><input name="_selected_action" value="1" class="action-select" type="checkbox"></td><th class="field-__str__"><a href="/admin/mvc/activo/1/change/">Floridablanca, Santander Department, Colombia</a></th></tr>
+
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="julito">
+<!-- MAPA -->
+<div class="map_canvas_wrapper">
+	<div id="map_canvas">		
+	</div>
+</div>
+<!-- MAPA -->		
+</div>
+</div>
