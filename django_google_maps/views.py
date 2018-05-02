@@ -31,12 +31,31 @@ def get_activos(request):
 		return JSONResponse(activos)
 
 
-def get_last_actives(request):
+def get_last_actives(request, caso):
+	print("IVIBILBIOBILB")
 
-	cantidadActivos = 10
+	if caso == "todos":
+		activosQuery = models.Activo.objects.all()
+		
+
+	elif caso == "ultimos":
+		cantidadActivos = 10
+		activosQuery = models.Activo.objects.all().order_by('-id')[:cantidadActivos-1]
+
+	else:
+		tipoActivo = models.Tipoactivo.objects.get(id=caso)
+		activosQuery = models.Activo.objects.filter(tipoactivo = tipoActivo)
+
+	return filter_actives(activosQuery)
+
+	
+	
+
+
+
+
+def filter_actives(activosQuery):
 	activos = []
-
-	activosQuery = models.Activo.objects.all().order_by('-id')
 	for activo in activosQuery:
 		activos.append({
 				"tipo": activo.tipoactivo.nombre,
@@ -46,17 +65,53 @@ def get_last_actives(request):
 
 	return JSONResponse(activos)
 
-def filter_actives(request, pkTipo):
-	activos = []
-	tipoActivo = models.Tipoactivo.objects.get(id=pkTipo)
-	activosQuery = models.Activo.objects.filter(tipoactivo = tipoActivo)
-	for activo in activosQuery:
-		activos.append({
-				"tipo": activo.tipoactivo.nombre,
-				"ubicacion": activo.address,
-				"id": activo.id
-			})
-
-	return JSONResponse(activos)
 
 
+
+
+
+
+# def filter_actives(request, pkTipo):
+
+
+
+# 	activos = []
+# 	tipoActivo = models.Tipoactivo.objects.get(id=pkTipo)
+# 	activosQuery = models.Activo.objects.filter(tipoactivo = tipoActivo)
+# 	for activo in activosQuery:
+# 		activos.append({
+# 				"tipo": activo.tipoactivo.nombre,
+# 				"ubicacion": activo.address,
+# 				"id": activo.id
+# 			})
+
+# 	return JSONResponse(activos)
+
+
+# def filter_activos(request,caso):
+# 	if request.method == 'GET':
+
+# 		if caso == "ultimos":
+# 			cantidadActivos = 10
+# 			break
+# 		elif caso == "todos":
+# 			query = models.Activo.objects.all() #Traer todos los activos
+
+# 		elif caso == "1":
+# 			break
+# 		elif caso == "2":
+# 			break
+# 		elif caso == "3":
+# 			break
+
+
+		
+# 		activos = []
+
+# 		for activo in query:
+# 			activos.append({"id":activo.id,
+# 				"lat":activo.geolocation.lat,
+# 				"lon":activo.geolocation.lon,
+# 				"tipo":str(activo.tipoactivo)})
+
+# 		return JSONResponse(activos)

@@ -30,14 +30,19 @@
 
 
 
-	<label>Filtrar: <select name="action" required="">
-  		<option value="" selected="">---------</option>
-
-  		<option value="delete_selected">Arbol</option>
-  		<option value="delete_selected">Arbusto</option>
-  		<option value="delete_selected">Cultivo</option>
+	<label>Filtrar: <select name="action" required="" id="filtro" onchange="test(this);">
+		<option value="ultimos" selected="">Ultimos 10</option>		
+  		<option value="1">Arbol</option>
+  		<option value="2">Arbusto</option>
+  		<option value="3">Cultivo</option>
+  		<option value="todos">Todos</option>
 
 		</select>
+
+		<!--<script>
+
+
+		</script> -->
 
 		<!--<button type="submit" class="button" title="Ejecutar la acción seleccionada" name="index" value="0" style="display:inline;">Ir</button>-->
 
@@ -76,7 +81,45 @@
 
 			<script>
 
+			//var opcion = "todos";
+			window.test = function(e){
 
+				deleteRows();
+				drawTable();
+				/*if(e.value === '1'){
+					//console.log("Opcion 1");
+					//deleteRows();
+				}
+				else if (e.value === '2') {
+					console.log("Opcion 2");
+
+				}
+				else if (e.value === '3') {
+					//console.log("Opcion 3");
+					//deleteRows();
+				}
+				else if (e.value === 'ultimos') {
+					//console.log("Opcion ultimos");
+					//deleteRows();
+				}
+				else if (e.value === 'todos') {
+					//console.log("Opcion todos");
+					//deleteRows();
+				}
+				else{
+					//console.log("NINGUNA OPCION");
+				}*/
+			}
+
+			function deleteRows(){
+				var tbl = document.getElementById('result_list');
+				 
+				var rowCount = tbl.rows.length;
+				for(var i = rowCount - 1; i > 0; i--)
+				{
+					tbl.deleteRow(i);
+				}
+			}
 
 		
 
@@ -92,9 +135,11 @@
   					xhttp.open("GET", "demo_get.asp", true);
   					xhttp.send();*/
 
+  					var opcion = document.getElementById("filtro").value;
+  					console.log("VALOR ADQUIRIDO");
+  					console.log(opcion);
 
-
-		  			axios.get('../../../../../getLastActivos/').then(function (response) { 
+		  			axios.get('../../../../../getLastActivos/'+opcion+'/').then(function (response) { 
 				        this.initData = response.data;
 				        console.log("CARGAR 10 ACTIVOS")
 				        console.log(this.initData);
