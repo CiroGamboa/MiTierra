@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from mvc import models
+#from . import models
 
 
 class JSONResponse(HttpResponse):
@@ -28,4 +29,34 @@ def get_activos(request):
 				"tipo":str(activo.tipoactivo)})
 
 		return JSONResponse(activos)
+
+
+def get_last_actives(request):
+
+	cantidadActivos = 10
+	activos = []
+
+	activosQuery = models.Activo.objects.all().order_by('-id')
+	for activo in activosQuery:
+		activos.append({
+				"tipo": activo.tipoactivo.nombre,
+				"ubicacion": activo.address,
+				"id": activo.id
+			})
+
+	return JSONResponse(activos)
+
+def filter_actives(request, pkTipo):
+	activos = []
+	tipoActivo = models.Tipoactivo.objects.get(id=pkTipo)
+	activosQuery = models.Activo.objects.filter(tipoactivo = tipoActivo)
+	for activo in activosQuery:
+		activos.append({
+				"tipo": activo.tipoactivo.nombre,
+				"ubicacion": activo.address,
+				"id": activo.id
+			})
+
+	return JSONResponse(activos)
+
 

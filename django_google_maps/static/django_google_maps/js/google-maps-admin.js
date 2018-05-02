@@ -220,8 +220,15 @@ function googleMapAdmin()
     var self = {
         initialize: function(initData) {
 
-            var lat = 7.078179;
-            var lng = -73.108048;
+            //var lat = 7.078179;
+            //var lng = -73.108048;
+
+            // Inicializar centrandose en el ultimo activo agregado
+            var ultimoActivo = initData[initData.length-1];
+            var lat = ultimoActivo.lat;
+            var lng = ultimoActivo.lon;
+
+
             var zoom = 12;
 
 
