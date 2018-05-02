@@ -201,6 +201,7 @@ This script expects:
 //     return self;
 // }
 
+var globalQuery;
 
 function googleMapAdmin()
 {
@@ -215,11 +216,12 @@ function googleMapAdmin()
     var actualLatLng;
     var dummy = 0;
     var current_marker;
-
+    var markers = [];
 
     var self = {
         initialize: function(initData) {
 
+            globalQuery = initData;
             //var lat = 7.078179;
             //var lng = -73.108048;
 
@@ -250,6 +252,24 @@ function googleMapAdmin()
 
             map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
+            // Estar pendiente del cambio en el filtro
+            filtro = document.getElementById("filtro");
+            google.maps.event.addDomListener(filtro,'change', function() {
+
+
+
+                self.deleteMarkers(); console.log(globalQuery); 
+                    var opcion = document.getElementById("filtro").value;
+
+                    axios.get('../../../../../getLastActivos/'+opcion+'/').then(function (response) { 
+                        this.initData = response.data;
+                        self.addOldMarkers(this.initData);
+                }); 
+
+
+
+
+            });
 
             map.addListener("click", function(event) {
                 // get lat/lon of click
@@ -274,6 +294,8 @@ function googleMapAdmin()
                     });
 
                     current_marker = marker;
+
+
 
                     self.updateGeolocation(marker.position);
                     self.addMarkerDrag(marker);
@@ -318,7 +340,7 @@ function googleMapAdmin()
         },
 
         addOldMarkers: function(initData) {
-            console.log("ENTRO");
+            //console.log("ENTRO");
               var image = {
                 url: "https://cdn1.iconfinder.com/data/icons/map-objects/154/map-object-tree-park-forest-point-place-512.png",
                 // This marker is 20 pixels wide by 32 pixels high.
@@ -334,7 +356,7 @@ function googleMapAdmin()
                 var lat_in = initData[i].lat;
                 var lon_in = initData[i].lon;
                 var tipo = initData[i].tipo;
-                console.log(tipo);
+                //console.log(tipo);
 
                 if(tipo == "Arbol")
                 {
@@ -349,13 +371,15 @@ function googleMapAdmin()
                     image.url = "https://cdn2.iconfinder.com/data/icons/places-4/100/leaf_place_marker_location_nature_eco-512.png";
                 }
 
-                console.log(lat_in);
-                console.log(lon_in);
+                //console.log(lat_in);
+                //console.log(lon_in);
                 var marker = new google.maps.Marker({
                     position: {lat: lat_in, lng: lon_in},
                     map: map,
                     icon: image
                 });
+
+                markers.push(marker);
 
             }
 
@@ -439,7 +463,7 @@ function googleMapAdmin()
 
         getExistingLocation: function() {
             var geolocation = document.getElementById(geolocationId).value;
-            console.log(geolocation);
+            //console.log(geolocation);
             if (geolocation) {
                 return geolocation.split(',');
             }
@@ -447,7 +471,7 @@ function googleMapAdmin()
 
         codeAddress: function() {
             var place = autocomplete.getPlace();
-            console.log(place);
+            //console.log(place);
 
             if(place.geometry !== undefined) {
                 self.updateWithCoordinates(place.geometry.location);
@@ -471,16 +495,34 @@ function googleMapAdmin()
             self.updateGeolocation(latlng);
         },
 
+        setMapOnAll: function(map){
+            for (var i = 0; i < markers.length; i++)
+            {
+                markers[i].setMap(map);
+            }
+        },
+
+
+        clearMarkers: function(){
+            self.setMapOnAll(null);
+        },
+
+        deleteMarkers: function(){
+            self.clearMarkers();
+            markers = [];
+        },
+
+
         callback: function(results, status) {
-            console.log("CALLLLLLLLLLL");
-            console.log(results);
-            console.log(status);
+            //console.log("CALLLLLLLLLLL");
+            //console.log(results);
+            //console.log(status);
               if (status == google.maps.places.PlacesServiceStatus.OK) {
                 //for (var i = 0; i < results.length; i++) {
                   //var place = results[i];
                   //console.log(results[i]);
                 //}
-                console.log(results[0]);
+                //console.log(results[0]);
                 radius = 500;
                 document.getElementById(addressId).value = results[0].name;
               }
@@ -510,14 +552,17 @@ function googleMapAdmin()
 
 $(document).ready(function() {
 
-    console.log("Aqui");
-    console.log(document.URL);
-        axios.get('../../../../../getActivos/').then(function (response) { 
-        this.initData = response.data;
-        console.log(this.initData);
-        var googlemap = googleMapAdmin();
-        googlemap.initialize(this.initData);
-        console.log("Hiiiieeeeerrrr");
+    //console.log("Aqui");
+    //console.log(document.URL);
+        var opcion = document.getElementById("filtro").value;
+
+        axios.get('../../../../../getLastActivos/'+opcion+'/').then(function (response) { 
+            this.initData = response.data;
+            globalQuery = this.initData;
+            //console.log(this.initData);
+            var googlemap = googleMapAdmin();
+            googlemap.initialize(this.initData);
+            //console.log("Hiiiieeeeerrrr");
     }); 
 
         //Falta incluir axios, hacer la URL, el controlador, sacar lat, long y tipo de cada activo desde la db, buscar iconos para representar cada uno
@@ -530,26 +575,130 @@ $(document).ready(function() {
 
 
 
+            globalQuery = this.initData;
+            console.log("Globarl");
+            console.log(globalQuery);
+            //var opcion = "todos";
+            window.test = function(e){
 
+                deleteRows();
+                drawTable();
+                /*if(e.value === '1'){
+                    //console.log("Opcion 1");
+                    //deleteRows();
+                }
+                else if (e.value === '2') {
+                    console.log("Opcion 2");
 
+                }
+                else if (e.value === '3') {
+                    //console.log("Opcion 3");
+                    //deleteRows();
+                }
+                else if (e.value === 'ultimos') {
+                    //console.log("Opcion ultimos");
+                    //deleteRows();
+                }
+                else if (e.value === 'todos') {
+                    //console.log("Opcion todos");
+                    //deleteRows();
+                }
+                else{
+                    //console.log("NINGUNA OPCION");
+                }*/
+            }
 
-
-
-
-
-
-
-function googleMapAdmin3() {
-
-    var self = {
-        initialize: function(initData) {
-            
-        },
-
-
+            function deleteRows(){
+                var tbl = document.getElementById('result_list');
+                 
+                var rowCount = tbl.rows.length;
+                for(var i = rowCount - 1; i > 0; i--)
+                {
+                    tbl.deleteRow(i);
+                }
+            }
 
         
-    };
 
-    return self;
-}
+                function drawTable() {
+
+                    // make request
+                    /*var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("demo").innerHTML = this.responseText;
+                    }
+                    };
+                    xhttp.open("GET", "demo_get.asp", true);
+                    xhttp.send();*/
+
+                    var opcion = document.getElementById("filtro").value;
+                    //console.log("VALOR ADQUIRIDO");
+                    //console.log(opcion);
+
+                    axios.get('../../../../../getLastActivos/'+opcion+'/').then(function (response) { 
+                        this.initData = response.data;
+                        globalQuery = this.initData;
+                        //console.log("CARGAR 10 ACTIVOS")
+                        //console.log(this.initData);
+                        var totalRows = this.initData.length;
+
+                    // get the reference for the body
+                    //var div1 = document.getElementById('div1');
+             
+                    // creates a <table> element
+                    //var tbl = document.createElement("table");
+                        var tbl = document.getElementById('result_list');
+                 
+                        // creating rows
+                        
+                        for (var r = 0; r < totalRows; r++) {
+
+                            activo = this.initData[r];
+                            //console.log("INFO");
+                            //console.log(activo.id);
+                            //console.log(activo.tipo);
+                            //console.log(activo.ubicacion);
+
+
+                            
+                            if(r%2 == 0)
+                            {
+                                var clase = "row1";
+                            }
+                            else
+                            {
+                                var clase = "row2";
+                            }
+
+                            var row = document.createElement("tr");
+                            
+                            row.className = clase;
+
+                             // create cells in row
+                             
+                             
+                             //var cellText_Tipo = document.createTextNode("Arbol");
+                             //cell_Tipo.innerHTML=  '<a href="'+whatever+'">'+fname[j]+'</a>';
+                             
+                             //cellText_Tipo.appendChild(link);
+                             //cell_Tipo.appendChild(cellText_Tipo);
+                             var cell_Tipo = document.createElement("td");
+                             cell_Tipo.innerHTML=  '<a href="/admin/mvc/activo/'+activo.id+'/change/" title="Modificar">'+activo.tipo+'</a>';
+                             row.appendChild(cell_Tipo);
+
+                             var cell_Ubicacion = document.createElement("td");
+                             cell_Ubicacion.innerHTML=  '<a href="/admin/mvc/activo/'+activo.id+'/change/" title="Modificar">'+activo.ubicacion+'</a>';
+                             row.appendChild(cell_Ubicacion);
+
+
+                             tbl.appendChild(row); // add the row to the end of the table body
+                        }
+                
+                 //div1.appendChild(tbl); // appends <table> into <div1>
+
+             }); //axios
+            }
+            window.onload=drawTable; 
+
+

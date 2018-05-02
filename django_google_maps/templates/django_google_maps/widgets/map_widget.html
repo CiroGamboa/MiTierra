@@ -79,8 +79,11 @@
 			</thead>
 			<tbody>
 
-			<script>
+			<!--<script>
 
+			var globalQuery = this.initData;
+			console.log("Globarl");
+			console.log(globalQuery);
 			//var opcion = "todos";
 			window.test = function(e){
 
@@ -136,13 +139,13 @@
   					xhttp.send();*/
 
   					var opcion = document.getElementById("filtro").value;
-  					console.log("VALOR ADQUIRIDO");
-  					console.log(opcion);
+  					//console.log("VALOR ADQUIRIDO");
+  					//console.log(opcion);
 
 		  			axios.get('../../../../../getLastActivos/'+opcion+'/').then(function (response) { 
 				        this.initData = response.data;
-				        console.log("CARGAR 10 ACTIVOS")
-				        console.log(this.initData);
+				        //console.log("CARGAR 10 ACTIVOS")
+				        //console.log(this.initData);
 				        var totalRows = this.initData.length;
 
 			        // get the reference for the body
@@ -157,10 +160,10 @@
 				        for (var r = 0; r < totalRows; r++) {
 
 				        	activo = this.initData[r];
-				        	console.log("INFO");
-				        	console.log(activo.id);
-				        	console.log(activo.tipo);
-				        	console.log(activo.ubicacion);
+				        	//console.log("INFO");
+				        	//console.log(activo.id);
+				        	//console.log(activo.tipo);
+				        	//console.log(activo.ubicacion);
 
 
 				        	
@@ -204,7 +207,7 @@
 			window.onload=drawTable; 
 
 
-			</script>
+			</script> -->
 
 				<!--
 				<tr class="row1">

@@ -32,7 +32,6 @@ def get_activos(request):
 
 
 def get_last_actives(request, caso):
-	print("IVIBILBIOBILB")
 
 	if caso == "todos":
 		activosQuery = models.Activo.objects.all()
@@ -58,6 +57,8 @@ def filter_actives(activosQuery):
 	activos = []
 	for activo in activosQuery:
 		activos.append({
+				"lat":activo.geolocation.lat,
+				"lon":activo.geolocation.lon,
 				"tipo": activo.tipoactivo.nombre,
 				"ubicacion": activo.address,
 				"id": activo.id
