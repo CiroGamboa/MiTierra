@@ -253,21 +253,21 @@ function googleMapAdmin()
             map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
             // Estar pendiente del cambio en el filtro
+
+
             filtro = document.getElementById("filtro");
             google.maps.event.addDomListener(filtro,'change', function() {
 
-
-
-                self.deleteMarkers(); console.log(globalQuery); 
+                if(!document.URL.includes("change"))
+                {
+                    self.deleteMarkers(); console.log(globalQuery); 
                     var opcion = document.getElementById("filtro").value;
 
                     axios.get('../../../../../getLastActivos/'+opcion+'/').then(function (response) { 
                         this.initData = response.data;
                         self.addOldMarkers(this.initData);
-                }); 
-
-
-
+                    }); 
+                }
 
             });
 
